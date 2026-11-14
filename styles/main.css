@@ -99,6 +99,34 @@ html, body {
     transition: color 0.2s ease, border-color 0.2s ease;
 }
 
+.btn-pause {
+    position: absolute;
+    top: 16px;
+    right: 16px;
+    z-index: 10;
+    background: transparent;
+    border: 1px solid #444;
+    border-radius: 50%;
+    width: 36px;
+    height: 36px;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: border-color 0.2s ease, background 0.2s ease;
+}
+
+.btn-pause:hover {
+    border-color: #aaa;
+    background: rgba(255, 255, 255, 0.05);
+}
+
+.btn-pause .btn-icon {
+    width: 16px;
+    height: 16px;
+}
+
 .btn-nav:hover {
     color: #fff;
     border-color: #aaa;
