@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Last Orbit</title>
+    <link rel="stylesheet" href="styles/main.css">
+</head>
+<body>
+
+    <!-- SCREEN 1: Intro -->
+    <div id="screen-intro" class="screen active">
+        <div class="animation-bg" id="animation-bg">
+            <!-- Background animation goes here -->
+        </div>
+        <div class="intro-content">
+            <button id="btn-start" class="btn-start">Answer</button>
+        </div>
+    </div>
+
+    <!-- SCREEN 2: Game -->
+    <div id="screen-game" class="screen">
+        <div class="game-content">
+            <!-- Game UI goes here -->
+
+            <!-- Dev nav buttons — remove or replace with real game triggers later -->
+            <button data-action="back" class="btn-nav">← Back</button>
+            <button id="btn-go-ending" class="btn-nav">Go to Ending →</button>
+        </div>
+    </div>
+
+    <!-- SCREEN 3: Ending -->
+    <div id="screen-ending" class="screen">
+        <div class="ending-content">
+            <!-- Ending UI goes here -->
+
+            <button data-action="back" class="btn-nav">← Back</button>
+            <button id="btn-restart" class="btn-nav btn-nav--highlight">Play Again</button>
+        </div>
+    </div>
+
+    <script type="module" src="src/main.js"></script>
+</body>
+</html>
