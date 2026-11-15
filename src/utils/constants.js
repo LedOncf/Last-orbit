@@ -1,4 +1,4 @@
-export const SCREENS = { INTRO: 'screen-intro', GAME: 'screen-game', ENDING: 'screen-ending' };
+export const SCREENS = { INTRO: 'screen-intro', SELECTION: 'screen-selection', GAME: 'screen-game', ENDING: 'screen-ending' };
 export const TRANSITION_MS = 500;   // = transition de .screen
 export const FADE_MS = 400;         // = transition de .comic-page
 export const MAX_TURNS = 5;         // 1 turno por hoja de cómic
