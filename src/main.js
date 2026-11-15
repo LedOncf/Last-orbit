@@ -5,8 +5,11 @@ import { GameManager } from './core/GameManager.js';
 import { GameUI } from './ui/GameUI.js';
 import { MinigameManager } from './minigames/MinigameManager.js';
 import { minigamesData } from './data/minigamesData.js';
+import { ShipSelection } from './core/ShipSelection.js';
+import { shipsData } from './data/shipsData.js';
 
 const gm = new GameManager();
+let selectedShip = null;
 
 function startPageMinigame() {
     const page = ComicPages.getIndex() + 1;
@@ -22,7 +25,7 @@ function startPageMinigame() {
 async function startRun() {
     MinigameManager.stop();
     gm.reset();
-    gm.startGame();
+    gm.startGame();    // TODO: aplicar selectedShip al GameManager (necesito GameManager.js)
     ComicPages.reset();
     GameUI.showEvent(null);
     GameUI.renderAll();
@@ -52,9 +55,21 @@ document.addEventListener('DOMContentLoaded', () => {
         GameUI.renderAll();
     });
 
+    // NUEVO: inicializa la selección de nave
+    ShipSelection.init(shipId => {
+        selectedShip = shipsData[shipId];
+        startRun();
+    });
+
     const modal = document.getElementById('modal-intro');
     document.getElementById('btn-start').addEventListener('click', () => modal.classList.remove('hidden'));
-    document.getElementById('btn-next').addEventListener('click', () => { modal.classList.add('hidden'); startRun(); });
+
+    // CAMBIADO: antes llamaba a startRun(), ahora abre la selección
+    document.getElementById('btn-next').addEventListener('click', () => {
+        modal.classList.add('hidden');
+        ScreenManager.goToScreen(SCREENS.SELECTION);
+    });
+
     document.getElementById('btn-next-page').addEventListener('click', onNextPage);
     document.getElementById('btn-restart').addEventListener('click', () => { MinigameManager.stop(); ScreenManager.resetTo(SCREENS.INTRO); });
 });
