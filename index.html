@@ -37,7 +37,9 @@
             <img src="assets/img/hamburguerMenu.svg" alt="Menu" class="btn-icon">
         </button>
         <div class="comic-layout">
-            <div class="comic-panel panel--1"></div>
+            <div class="comic-panel panel--1">
+                <canvas id="minigame-canvas"></canvas>
+            </div>
             <div class="comic-panel panel--2"></div>
             <div class="comic-panel panel--3"></div>
         </div>
@@ -320,11 +322,17 @@
                 btnNext.addEventListener('click', () => {
                     modalIntro.classList.add('hidden');
                     goToScreen(SCREENS.GAME);
+                    setTimeout(() => ShootingGame.start(), TRANSITION_MS);
                 });
             }
 
             const btnEnding = document.getElementById('btn-go-ending');
-            if (btnEnding) btnEnding.addEventListener('click', () => goToScreen(SCREENS.ENDING));
+            if (btnEnding) {
+                btnEnding.addEventListener('click', () => {
+                    ShootingGame.stop();
+                    goToScreen(SCREENS.ENDING);
+                });
+            }
 
             const btnRestart = document.getElementById('btn-restart');
             if (btnRestart) btnRestart.addEventListener('click', () => resetTo(SCREENS.INTRO));
@@ -391,6 +399,134 @@
 
         getState() { return this.state; }
     }
+
+    // ─── src/minigame/ShootingGame.js ─────────────────────────────────────────
+
+    const ShootingGame = (() => {
+        let canvas, ctx;
+        let targets    = [];
+        let score      = 0;
+        let running    = false;
+        let spawnTimer = null;
+        let animFrame  = null;
+
+        const TARGET_RADIUS  = 24;
+        const SPAWN_INTERVAL = 1200; // ms entre spawns
+        const TARGET_LIFE    = 2000; // ms antes de desaparecer
+
+        function _resize() {
+            const rect = canvas.parentElement.getBoundingClientRect();
+            canvas.width  = rect.width;
+            canvas.height = rect.height;
+        }
+
+        function _spawnTarget() {
+            if (!running) return;
+            const margin = TARGET_RADIUS + 10;
+            const x = margin + Math.random() * (canvas.width  - margin * 2);
+            const y = margin + Math.random() * (canvas.height - margin * 2);
+            targets.push({ x, y, born: performance.now(), hit: false });
+        }
+
+        function _draw(now) {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            // Fondo
+            ctx.fillStyle = '#1a1a2e';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+            // Blancos
+            targets = targets.filter(t => {
+                const age = now - t.born;
+                if (age > TARGET_LIFE && !t.hit) return false;
+                if (t.hit) return false;
+
+                const lifeRatio = age / TARGET_LIFE;
+
+                // Círculo exterior (se achica con el tiempo)
+                const outerR = TARGET_RADIUS * (1 - lifeRatio * 0.3);
+                ctx.beginPath();
+                ctx.arc(t.x, t.y, outerR, 0, Math.PI * 2);
+                ctx.fillStyle = `rgba(220, 50, 50, ${1 - lifeRatio})`;
+                ctx.fill();
+
+                // Anillo blanco
+                ctx.beginPath();
+                ctx.arc(t.x, t.y, outerR * 0.65, 0, Math.PI * 2);
+                ctx.fillStyle = `rgba(255,255,255, ${1 - lifeRatio})`;
+                ctx.fill();
+
+                // Centro rojo
+                ctx.beginPath();
+                ctx.arc(t.x, t.y, outerR * 0.3, 0, Math.PI * 2);
+                ctx.fillStyle = `rgba(180, 0, 0, ${1 - lifeRatio})`;
+                ctx.fill();
+
+                return true;
+            });
+
+            // Score
+            ctx.fillStyle = '#fff';
+            ctx.font      = 'bold 18px sans-serif';
+            ctx.fillText(`Score: ${score}`, 14, 28);
+
+            if (running) animFrame = requestAnimationFrame(_draw);
+        }
+
+        function _onClick(e) {
+            if (!running) return;
+            const rect = canvas.getBoundingClientRect();
+            const mx = e.clientX - rect.left;
+            const my = e.clientY - rect.top;
+
+            let hit = false;
+            targets.forEach(t => {
+                if (t.hit) return;
+                const dx = mx - t.x;
+                const dy = my - t.y;
+                if (Math.sqrt(dx * dx + dy * dy) <= TARGET_RADIUS) {
+                    t.hit = true;
+                    score++;
+                    hit = true;
+                }
+            });
+
+            // Flash en miss
+            if (!hit) {
+                ctx.fillStyle = 'rgba(255,255,255,0.08)';
+                ctx.fillRect(0, 0, canvas.width, canvas.height);
+            }
+        }
+
+        function start() {
+            if (running) return;
+            canvas  = document.getElementById('minigame-canvas');
+            ctx     = canvas.getContext('2d');
+            score   = 0;
+            targets = [];
+            running = true;
+
+            _resize();
+            window.addEventListener('resize', _resize);
+            canvas.addEventListener('click', _onClick);
+
+            _spawnTarget();
+            spawnTimer = setInterval(_spawnTarget, SPAWN_INTERVAL);
+            animFrame  = requestAnimationFrame(_draw);
+        }
+
+        function stop() {
+            running = false;
+            clearInterval(spawnTimer);
+            cancelAnimationFrame(animFrame);
+            if (canvas) canvas.removeEventListener('click', _onClick);
+            window.removeEventListener('resize', _resize);
+        }
+
+        function getScore() { return score; }
+
+        return { start, stop, getScore };
+    })();
 
     // ─── src/main.js ──────────────────────────────────────────────────────────
 
