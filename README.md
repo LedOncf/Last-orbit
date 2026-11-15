@@ -32,5 +32,4 @@ https://white-forest-0f9972610.5.azurestaticapps.net/
 
 
 ## 📖 Game Design & Narrative
-Consulta la historia completa, mecánicas y balances en [docs/GDD_LAST_ORBIT.md](docs/GDD_LAST_ORBIT.md).
-
+Explore the complete story, game mechanics, and balance rules in [docs/GDD_LAST_ORBIT.md](docs/GDD_LAST_ORBIT.md).
