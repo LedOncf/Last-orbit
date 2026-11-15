@@ -47,8 +47,40 @@ html, body {
     inset: 0;
     width: 100%;
     height: 100%;
-    background: #000;   /* placeholder hasta que agregues la animación */
+    background: #000;
     z-index: 0;
+}
+
+.animation-bg img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+/* Imagen apagada siempre visible debajo */
+.bg-off {
+    z-index: 1;
+}
+
+/* Imagen prendida encima, parpadea */
+.bg-on {
+    z-index: 2;
+    animation: blink 1.8s steps(1, end) infinite;
+}
+
+@keyframes blink {
+    0%   { opacity: 1; }
+    45%  { opacity: 1; }
+    50%  { opacity: 0; }
+    55%  { opacity: 0; }
+    60%  { opacity: 1; }
+    65%  { opacity: 1; }
+    70%  { opacity: 0; }
+    75%  { opacity: 0; }
+    80%  { opacity: 1; }
+    100% { opacity: 1; }
 }
 
 /* Contenedor del botón: centrado horizontalmente, pegado abajo */
