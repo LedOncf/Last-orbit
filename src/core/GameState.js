@@ -1,5 +1,60 @@
 // src/core/GameState.js
 // Handles screen navigation with a history stack (forward + back).
+// ─── src/core/ComicPages.js ───────────────────────────────────────────────
+const ComicPages = (() => {
+    const FADE_MS = 400; // igual al transition de .comic-page
+    let pages = [];
+    let index = 0;
+    let busy  = false;
+
+    function _update() {
+        const indicator = document.getElementById('page-indicator');
+        const btn       = document.getElementById('btn-next-page');
+        if (indicator) indicator.textContent = `${index + 1} / ${pages.length}`;
+        if (btn) btn.textContent = hasNext() ? 'Next page →' : 'Go to Ending →';
+    }
+
+    function hasNext()  { return index < pages.length - 1; }
+    function getIndex() { return index; }
+
+    function next() {
+        if (busy || !hasNext()) return false;
+        busy = true;
+
+        const from = pages[index];
+        const to   = pages[index + 1];
+
+        from.style.opacity = '0';
+        setTimeout(() => {
+            from.classList.remove('active');
+            to.classList.add('active');
+            void to.offsetWidth;          // fuerza reflow para que corra el fade
+            to.style.opacity = '1';
+            index++;
+            busy = false;
+            _update();
+        }, FADE_MS);
+
+        return true;
+    }
+
+    // Vuelve a la hoja 1 (se llama al empezar o reiniciar la partida)
+    function reset() {
+        pages = [...document.querySelectorAll('.comic-page')];
+        pages.forEach(p => {
+            p.classList.remove('active');
+            p.style.opacity = '';
+        });
+        index = 0;
+        busy  = false;
+        pages[0].classList.add('active');
+        pages[0].style.opacity = '1';
+        _update();
+    }
+
+    return { hasNext, getIndex, next, reset };
+})();
+
 
 export const SCREENS = {
     INTRO:  'screen-intro',

@@ -182,7 +182,14 @@ html, body {
     flex-direction: column;
 }
 
-/* ── Comic layout ── */
+/* ── Contenedor de hojas de cómic ── */
+.comic-pages {
+    flex: 1;
+    display: flex;
+    min-height: 0;
+}
+
+/* ── Comic layout (hoja 1 por defecto) ── */
 .comic-layout {
     flex: 1;
     display: grid;
@@ -195,10 +202,68 @@ html, body {
     grid-template-rows: 1fr 1fr;
 }
 
+/* Cada hoja: oculta por defecto, con fade (debe ir DESPUÉS de .comic-layout) */
+.comic-page {
+    display: none;
+    opacity: 0;
+    transition: opacity 0.4s ease;
+}
+
+.comic-page.active {
+    display: grid;
+}
+
+/* ── Layouts extra ── */
+/* B: un panel ancho arriba, tres abajo */
+.layout--b {
+    grid-template-columns: 1fr 1fr 1fr;
+    grid-template-rows: 1.3fr 1fr;
+}
+
+.layout--b .panel--wide {
+    grid-column: 1 / 4;
+}
+
+/* C: dos paneles arriba, uno ancho abajo */
+.layout--c {
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: 1fr 1fr;
+}
+
+.layout--c .panel--wide {
+    grid-column: 1 / 3;
+}
+
+/* D: cuadrícula de 2x2 */
+.layout--d {
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: 1fr 1fr;
+}
+
+/* E: dos paneles apilados a la izquierda, uno alto a la derecha */
+.layout--e {
+    grid-template-columns: 1fr 1.4fr;
+    grid-template-rows: 1fr 1fr;
+}
+
+.layout--e .panel--tall {
+    grid-column: 2;
+    grid-row: 1 / 3;
+}
+
 .comic-panel {
     border: 4px solid #000;
     border-radius: 4px;
     box-shadow: 4px 4px 0 #000;
+    overflow: hidden;
+}
+
+/* Para usar ilustraciones dentro de un panel: <img> dentro del .comic-panel */
+.comic-panel img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
 }
 
 /* Panel 1: ocupa toda la columna izquierda */
@@ -225,11 +290,26 @@ html, body {
     background: #27ae60;
 }
 
-/* Footer con el botón de dev */
+/* Colores placeholder de las hojas nuevas (cámbialos por tus ilustraciones) */
+.panel--4 { background: #8e44ad; }
+.panel--5 { background: #c0392b; }
+.panel--6 { background: #d68910; }
+.panel--7 { background: #16a085; }
+.panel--8 { background: #2c3e50; }
+.panel--9 { background: #7f8c8d; }
+.panel--10 { background: #e67e22; }
+
+/* Footer: contador de hojas + botón */
 .game-footer {
     display: flex;
-    justify-content: flex-end;
+    align-items: center;
+    justify-content: space-between;
     padding: 8px 12px;
+}
+
+.page-indicator {
+    color: #888;
+    font-size: 0.85rem;
 }
 
 /* =====================

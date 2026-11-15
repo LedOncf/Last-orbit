@@ -31,20 +31,58 @@
         </div>
     </div>
 
-    <!-- SCREEN 2: Game -->
+    <!-- SCREEN 2: Game (hojas de cómic) -->
     <div id="screen-game" class="screen">
         <button class="btn-pause" id="btn-pause-game">
             <img src="assets/img/hamburguerMenu.svg" alt="Menu" class="btn-icon">
         </button>
-        <div class="comic-layout">
-            <div class="comic-panel panel--1">
-                <canvas id="minigame-canvas"></canvas>
+
+        <div class="comic-pages">
+
+            <!-- HOJA 1: minijuego -->
+            <div class="comic-layout comic-page active" data-page="1" style="opacity:1">
+                <div class="comic-panel panel--1">
+                    <canvas id="minigame-canvas"></canvas>
+                </div>
+                <div class="comic-panel panel--2"></div>
+                <div class="comic-panel panel--3"></div>
             </div>
-            <div class="comic-panel panel--2"></div>
-            <div class="comic-panel panel--3"></div>
+
+            <!-- HOJA 2 -->
+            <div class="comic-layout comic-page layout--b" data-page="2">
+                <div class="comic-panel panel--wide panel--4"></div>
+                <div class="comic-panel panel--5"></div>
+                <div class="comic-panel panel--6"></div>
+                <div class="comic-panel panel--7"></div>
+            </div>
+
+            <!-- HOJA 3 -->
+            <div class="comic-layout comic-page layout--c" data-page="3">
+                <div class="comic-panel panel--5"></div>
+                <div class="comic-panel panel--4"></div>
+                <div class="comic-panel panel--wide panel--6"></div>
+            </div>
+
+            <!-- HOJA 4 -->
+            <div class="comic-layout comic-page layout--d" data-page="4">
+                <div class="comic-panel panel--8"></div>
+                <div class="comic-panel panel--9"></div>
+                <div class="comic-panel panel--10"></div>
+                <div class="comic-panel panel--7"></div>
+            </div>
+
+            <!-- HOJA 5 -->
+            <div class="comic-layout comic-page layout--e" data-page="5">
+                <div class="comic-panel panel--9"></div>
+                <div class="comic-panel panel--tall panel--5"></div>
+                <div class="comic-panel panel--8"></div>
+            </div>
+
         </div>
+
         <div class="game-footer">
-            <button id="btn-go-ending" class="btn-nav">Go to Ending →</button>
+            <span id="page-indicator" class="page-indicator">1 / 5</span>
+            <button id="btn-next-page" class="btn-nav">Next page →</button>
         </div>
     </div>
 
@@ -248,6 +286,63 @@
     // ─── src/systems/EndingManager.js ─────────────────────────────────────────
 
 
+    // ─── src/core/ComicPages.js ───────────────────────────────────────────────
+    // Maneja el paso entre hojas de cómic dentro de #screen-game.
+
+    const ComicPages = (() => {
+        const FADE_MS = 400; // igual al transition de .comic-page en el CSS
+        let pages = [];
+        let index = 0;
+        let busy  = false;
+
+        function _update() {
+            const indicator = document.getElementById('page-indicator');
+            const btn       = document.getElementById('btn-next-page');
+            if (indicator) indicator.textContent = `${index + 1} / ${pages.length}`;
+            if (btn) btn.textContent = hasNext() ? 'Next page →' : 'Go to Ending →';
+        }
+
+        function hasNext()  { return index < pages.length - 1; }
+        function getIndex() { return index; }
+
+        function next() {
+            if (busy || !hasNext()) return false;
+            busy = true;
+
+            const from = pages[index];
+            const to   = pages[index + 1];
+
+            from.style.opacity = '0';
+            setTimeout(() => {
+                from.classList.remove('active');
+                to.classList.add('active');
+                void to.offsetWidth;          // fuerza reflow para que corra el fade
+                to.style.opacity = '1';
+                index++;
+                busy = false;
+                _update();
+            }, FADE_MS);
+
+            return true;
+        }
+
+        // Vuelve a la hoja 1 (al empezar o reiniciar la partida)
+        function reset() {
+            pages = [...document.querySelectorAll('.comic-page')];
+            pages.forEach(p => {
+                p.classList.remove('active');
+                p.style.opacity = '';
+            });
+            index = 0;
+            busy  = false;
+            pages[0].classList.add('active');
+            pages[0].style.opacity = '1';
+            _update();
+        }
+
+        return { hasNext, getIndex, next, reset };
+    })();
+
     // ─── src/core/GameState.js ────────────────────────────────────────────────
 
     const SCREENS = {
@@ -317,20 +412,26 @@
                 });
             }
 
-            // Next → cierra el modal y va al juego
+            // Next → cierra el modal y va al juego (siempre desde la hoja 1)
             if (btnNext) {
                 btnNext.addEventListener('click', () => {
                     modalIntro.classList.add('hidden');
+                    ComicPages.reset();
                     goToScreen(SCREENS.GAME);
                     setTimeout(() => ShootingGame.start(), TRANSITION_MS);
                 });
             }
 
-            const btnEnding = document.getElementById('btn-go-ending');
-            if (btnEnding) {
-                btnEnding.addEventListener('click', () => {
-                    ShootingGame.stop();
-                    goToScreen(SCREENS.ENDING);
+            // Next page → siguiente hoja; en la última hoja → Ending
+            const btnNextPage = document.getElementById('btn-next-page');
+            if (btnNextPage) {
+                btnNextPage.addEventListener('click', () => {
+                    ShootingGame.stop(); // el minijuego solo vive en la hoja 1
+                    if (ComicPages.hasNext()) {
+                        ComicPages.next();
+                    } else {
+                        goToScreen(SCREENS.ENDING);
+                    }
                 });
             }
 
