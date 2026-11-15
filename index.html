@@ -5,635 +5,86 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Last Orbit</title>
     <link rel="stylesheet" href="styles/main.css">
+    <link rel="stylesheet" href="styles/cards.css">
 </head>
 <body>
-    <!-- SCREEN 1: Intro -->
     <div id="screen-intro" class="screen active">
         <div class="animation-bg" id="animation-bg">
             <img src="assets/img/telefonoApagado.png" alt="" class="bg-off">
             <img src="assets/img/TelefonoPrendido.png" alt="" class="bg-on">
         </div>
-        <div class="intro-content">
-            <button id="btn-start" class="btn-start">Answer</button>
-        </div>
+        <div class="intro-content"><button id="btn-start" class="btn-start">Answer</button></div>
     </div>
 
-    <!-- MODAL: Intro dialog -->
     <div id="modal-intro" class="modal-overlay hidden">
         <div class="modal-box">
-            <p class="modal-text">
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-                Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
-                Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris
-                nisi ut aliquip ex ea commodo consequat.
-            </p>
+            <p class="modal-text">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
             <button id="btn-next" class="btn-next">Next</button>
         </div>
     </div>
 
-    <!-- SCREEN 2: Game (hojas de cómic) -->
     <div id="screen-game" class="screen">
-        <button class="btn-pause" id="btn-pause-game">
-            <img src="assets/img/hamburguerMenu.svg" alt="Menu" class="btn-icon">
-        </button>
+        <button class="btn-pause" id="btn-pause-game" aria-label="Menu"><img src="assets/img/hamburguerMenu.svg" alt="" class="btn-icon"></button>
+
+        <header class="hud">
+            <div class="hud-stats" id="hud-stats"></div>
+            <div class="hud-crew" id="hud-crew"></div>
+            <div class="hud-meta" id="hud-meta"></div>
+        </header>
+        <div id="event-banner" class="event-banner" hidden></div>
 
         <div class="comic-pages">
-
-            <!-- HOJA 1: minijuego -->
-            <div class="comic-layout comic-page active" data-page="1" style="opacity:1">
-                <div class="comic-panel panel--1">
-                    <canvas id="minigame-canvas"></canvas>
-                </div>
+            <div class="comic-layout comic-page active" data-page="1">
+                <div class="comic-panel panel--1"><canvas class="minigame-canvas" data-minigame="1"></canvas></div>
                 <div class="comic-panel panel--2"></div>
                 <div class="comic-panel panel--3"></div>
             </div>
-
-            <!-- HOJA 2 -->
             <div class="comic-layout comic-page layout--b" data-page="2">
-                <div class="comic-panel panel--wide panel--4"></div>
+                <div class="comic-panel panel--wide panel--4"><canvas class="minigame-canvas" data-minigame="2"></canvas></div>
                 <div class="comic-panel panel--5"></div>
                 <div class="comic-panel panel--6"></div>
                 <div class="comic-panel panel--7"></div>
             </div>
-
-            <!-- HOJA 3 -->
             <div class="comic-layout comic-page layout--c" data-page="3">
                 <div class="comic-panel panel--5"></div>
                 <div class="comic-panel panel--4"></div>
-                <div class="comic-panel panel--wide panel--6"></div>
+                <div class="comic-panel panel--wide panel--6"><canvas class="minigame-canvas" data-minigame="3"></canvas></div>
             </div>
-
-            <!-- HOJA 4 -->
             <div class="comic-layout comic-page layout--d" data-page="4">
-                <div class="comic-panel panel--8"></div>
+                <div class="comic-panel panel--8"><canvas class="minigame-canvas" data-minigame="4"></canvas></div>
                 <div class="comic-panel panel--9"></div>
                 <div class="comic-panel panel--10"></div>
                 <div class="comic-panel panel--7"></div>
             </div>
-
-            <!-- HOJA 5 -->
             <div class="comic-layout comic-page layout--e" data-page="5">
                 <div class="comic-panel panel--9"></div>
-                <div class="comic-panel panel--tall panel--5"></div>
+                <div class="comic-panel panel--tall panel--5"><canvas class="minigame-canvas" data-minigame="5"></canvas></div>
                 <div class="comic-panel panel--8"></div>
             </div>
-
         </div>
 
+        <div class="card-tray">
+            <span id="plays-left"></span>
+            <div class="card-hand" id="card-hand"></div>
+        </div>
         <div class="game-footer">
+            <span id="minigame-hint" class="hint"></span>
             <span id="page-indicator" class="page-indicator">1 / 5</span>
-            <button id="btn-next-page" class="btn-nav">Next page →</button>
+            <button id="btn-next-page" class="btn-nav" disabled>Next page →</button>
         </div>
     </div>
 
-    <!-- SCREEN 3: Ending -->
     <div id="screen-ending" class="screen">
-        <button class="btn-pause" id="btn-pause-ending">
-            <img src="assets/img/hamburguerMenu.svg" alt="Menu" class="btn-icon">
-        </button>
+        <button class="btn-pause" id="btn-pause-ending" aria-label="Menu"><img src="assets/img/hamburguerMenu.svg" alt="" class="btn-icon"></button>
         <div class="ending-content">
-            <!-- Ending UI goes here -->
+            <h2 id="ending-title"></h2>
+            <p id="ending-text"></p>
+            <ul id="ending-stats"></ul>
             <button id="btn-restart" class="btn-nav btn-nav--highlight">Play Again</button>
         </div>
     </div>
 
-    <script>
-    // ─── src/utils/constants.js ───────────────────────────────────────────────
-
-
-    // ─── src/data/initialResources.js ────────────────────────────────────────
-
-
-    // ─── src/data/eventsData.js ───────────────────────────────────────────────
-
-    const eventsData = [
-        {
-            id: 1,
-            title: "Fuga de oxígeno",
-            description: "Una fuga amenaza el suministro de oxígeno.",
-            type: "emergency",
-            weight: 30,
-            effect: { oxygen: -15 }
-        },
-        {
-            id: 2,
-            title: "Falla energética",
-            description: "El generador presenta irregularidades.",
-            type: "emergency",
-            weight: 25,
-            effect: { energy: -20 }
-        },
-        {
-            id: 3,
-            title: "Descubrimiento desconocido",
-            description: "Se detecta una anomalía en el objeto interestelar.",
-            type: "discovery",
-            weight: 15,
-            effect: { researchLevel: 10, anomalyLevel: 5 }
-        },
-        {
-            id: 4,
-            title: "Día tranquilo",
-            description: "No se presentan incidentes importantes.",
-            type: "neutral",
-            weight: 30,
-            effect: {}
-        }
-    ];
-
-    // ─── src/data/cardsData.js ────────────────────────────────────────────────
-
-
-    // ─── src/data/crewData.js ─────────────────────────────────────────────────
-
-
-    // ─── src/models/CrewMember.js ─────────────────────────────────────────────
-
-    class CrewMember {
-        constructor(name, specialty) {
-            this.name = name;
-            this.specialty = specialty;
-            this.health = 100;
-            this.mentalHealth = 100;
-            this.status = "healthy";
-        }
-
-        modifyHealth(amount) {
-            this.health = Math.max(0, Math.min(100, this.health + amount));
-            this.updateStatus();
-        }
-
-        modifyMentalHealth(amount) {
-            this.mentalHealth = Math.max(0, Math.min(100, this.mentalHealth + amount));
-            this.updateStatus();
-        }
-
-        updateStatus() {
-            if (this.health <= 0) {
-                this.status = "dead";
-            } else if (this.health < 40) {
-                this.status = "critical";
-            } else if (this.health < 70) {
-                this.status = "injured";
-            } else {
-                this.status = "healthy";
-            }
-        }
-    }
-
-    // ─── src/models/Card.js ───────────────────────────────────────────────────
-
-
-    // ─── src/models/Event.js ──────────────────────────────────────────────────
-
-
-    // ─── src/systems/ResourceManager.js ──────────────────────────────────────
-
-    class ResourceManager {
-        constructor(gameState) {
-            this.state = gameState;
-        }
-
-        modifyResource(resource, amount) {
-            if (!(resource in this.state.resources)) {
-                throw new Error(`Recurso desconocido: ${resource}`);
-            }
-            const current = this.state.resources[resource];
-            const newValue = current + amount;
-            if (newValue < 0) return false;
-            this.state.resources[resource] =
-                resource === "materials" ? newValue : Math.min(100, newValue);
-            return true;
-        }
-
-        consumeDailyResources() {
-            this.modifyResource("oxygen", -10);
-            this.modifyResource("food", -8);
-            this.modifyResource("energy", -5);
-        }
-
-        getResource(resource) {
-            return this.state.resources[resource];
-        }
-
-        checkCriticalResources() {
-            const r = this.state.resources;
-            return r.oxygen <= 0 || r.food <= 0 || r.energy <= 0;
-        }
-    }
-
-    // ─── src/systems/CrewManager.js ───────────────────────────────────────────
-
-    class CrewManager {
-        constructor(gameState) {
-            this.state = gameState;
-        }
-
-        addCrewMember(member) {
-            this.state.crew.push(member);
-        }
-
-        getCrew() {
-            return this.state.crew;
-        }
-
-        damageCrewMember(name, damage) {
-            const member = this.state.crew.find(c => c.name === name);
-            if (!member) return false;
-            member.modifyHealth(-damage);
-            return true;
-        }
-
-        checkCrewStatus() {
-            return this.state.crew.every(m => m.status === "dead");
-        }
-    }
-
-    // ─── src/systems/EventManager.js ─────────────────────────────────────────
-
-    class EventManager {
-        constructor(gameState, resourceManager) {
-            this.state = gameState;
-            this.resources = resourceManager;
-        }
-
-        generateEvent() {
-            const totalWeight = eventsData.reduce((t, e) => t + e.weight, 0);
-            let random = Math.random() * totalWeight;
-            for (const event of eventsData) {
-                random -= event.weight;
-                if (random < 0) return event;
-            }
-            return eventsData[eventsData.length - 1];
-        }
-
-        applyEvent(event) {
-            for (const [resource, amount] of Object.entries(event.effect)) {
-                if (resource in this.state.resources) {
-                    this.resources.modifyResource(resource, amount);
-                } else if (resource in this.state.discovery) {
-                    this.state.discovery[resource] += amount;
-                }
-            }
-            this.state.addHistory(`Evento: ${event.title}`);
-            return event;
-        }
-    }
-
-    // ─── src/systems/CardManager.js ───────────────────────────────────────────
-
-
-    // ─── src/systems/EndingManager.js ─────────────────────────────────────────
-
-
-    // ─── src/core/ComicPages.js ───────────────────────────────────────────────
-    // Maneja el paso entre hojas de cómic dentro de #screen-game.
-
-    const ComicPages = (() => {
-        const FADE_MS = 400; // igual al transition de .comic-page en el CSS
-        let pages = [];
-        let index = 0;
-        let busy  = false;
-
-        function _update() {
-            const indicator = document.getElementById('page-indicator');
-            const btn       = document.getElementById('btn-next-page');
-            if (indicator) indicator.textContent = `${index + 1} / ${pages.length}`;
-            if (btn) btn.textContent = hasNext() ? 'Next page →' : 'Go to Ending →';
-        }
-
-        function hasNext()  { return index < pages.length - 1; }
-        function getIndex() { return index; }
-
-        function next() {
-            if (busy || !hasNext()) return false;
-            busy = true;
-
-            const from = pages[index];
-            const to   = pages[index + 1];
-
-            from.style.opacity = '0';
-            setTimeout(() => {
-                from.classList.remove('active');
-                to.classList.add('active');
-                void to.offsetWidth;          // fuerza reflow para que corra el fade
-                to.style.opacity = '1';
-                index++;
-                busy = false;
-                _update();
-            }, FADE_MS);
-
-            return true;
-        }
-
-        // Vuelve a la hoja 1 (al empezar o reiniciar la partida)
-        function reset() {
-            pages = [...document.querySelectorAll('.comic-page')];
-            pages.forEach(p => {
-                p.classList.remove('active');
-                p.style.opacity = '';
-            });
-            index = 0;
-            busy  = false;
-            pages[0].classList.add('active');
-            pages[0].style.opacity = '1';
-            _update();
-        }
-
-        return { hasNext, getIndex, next, reset };
-    })();
-
-    // ─── src/core/GameState.js ────────────────────────────────────────────────
-
-    const SCREENS = {
-        INTRO:  'screen-intro',
-        GAME:   'screen-game',
-        ENDING: 'screen-ending',
-    };
-
-    const TRANSITION_MS = 500;
-
-    const GameState = (() => {
-        const history = [SCREENS.INTRO];
-
-        function _currentId() {
-            return history[history.length - 1];
-        }
-
-        function _transition(fromId, toId, onSwap) {
-            const from = document.getElementById(fromId);
-            const to   = document.getElementById(toId);
-            if (!from || !to) {
-                console.warn(`[GameState] Screen not found: ${!from ? fromId : toId}`);
-                return;
-            }
-            from.style.opacity = '0';
-            setTimeout(() => {
-                from.classList.remove('active');
-                to.classList.add('active');
-                void to.offsetWidth;
-                to.style.opacity = '1';
-                onSwap();
-            }, TRANSITION_MS);
-        }
-
-        function goToScreen(screenId) {
-            if (screenId === _currentId()) return;
-            _transition(_currentId(), screenId, () => { history.push(screenId); });
-        }
-
-        function goBack() {
-            if (history.length <= 1) return;
-            const fromId = _currentId();
-            const toId   = history[history.length - 2];
-            _transition(fromId, toId, () => { history.pop(); });
-        }
-
-        function resetTo(screenId) {
-            const fromId = _currentId();
-            _transition(fromId, screenId, () => {
-                history.length = 0;
-                history.push(screenId);
-            });
-        }
-
-        function getCurrentScreen() { return _currentId(); }
-        function getHistory()       { return [...history]; }
-
-        function init() {
-            const btnStart   = document.getElementById('btn-start');
-            const modalIntro = document.getElementById('modal-intro');
-            const btnNext    = document.getElementById('btn-next');
-
-            // Answer → abre el modal
-            if (btnStart) {
-                btnStart.addEventListener('click', () => {
-                    modalIntro.classList.remove('hidden');
-                });
-            }
-
-            // Next → cierra el modal y va al juego (siempre desde la hoja 1)
-            if (btnNext) {
-                btnNext.addEventListener('click', () => {
-                    modalIntro.classList.add('hidden');
-                    ComicPages.reset();
-                    goToScreen(SCREENS.GAME);
-                    setTimeout(() => ShootingGame.start(), TRANSITION_MS);
-                });
-            }
-
-            // Next page → siguiente hoja; en la última hoja → Ending
-            const btnNextPage = document.getElementById('btn-next-page');
-            if (btnNextPage) {
-                btnNextPage.addEventListener('click', () => {
-                    ShootingGame.stop(); // el minijuego solo vive en la hoja 1
-                    if (ComicPages.hasNext()) {
-                        ComicPages.next();
-                    } else {
-                        goToScreen(SCREENS.ENDING);
-                    }
-                });
-            }
-
-            const btnRestart = document.getElementById('btn-restart');
-            if (btnRestart) btnRestart.addEventListener('click', () => resetTo(SCREENS.INTRO));
-
-            document.querySelectorAll('[data-action="back"]').forEach(el => {
-                el.addEventListener('click', goBack);
-            });
-        }
-
-        return { SCREENS, init, goToScreen, goBack, resetTo, getCurrentScreen, getHistory };
-    })();
-
-    // ─── src/core/GameManager.js ──────────────────────────────────────────────
-    // Fix: GameState is a singleton object (not a class), used directly.
-
-    class GameManager {
-        constructor() {
-            // GameState is the singleton above, not a constructor.
-            // Individual state data is stored here instead.
-            this.state = {
-                status: "preparation",
-                day: 1,
-                maxDays: 30,
-                resources: { oxygen: 100, food: 100, energy: 100, materials: 50 },
-                discovery: { researchLevel: 0, anomalyLevel: 0 },
-                crew: [],
-                history: [],
-                addHistory(entry) { this.history.push(entry); }
-            };
-
-            this.resources = new ResourceManager(this.state);
-            this.crew      = new CrewManager(this.state);
-            this.events    = new EventManager(this.state, this.resources);
-        }
-
-        startGame() {
-            if (this.state.status !== "preparation") return false;
-
-            this.crew.addCrewMember(new CrewMember("Alex",  "Ingeniero"));
-            this.crew.addCrewMember(new CrewMember("Morgan","Científico"));
-            this.crew.addCrewMember(new CrewMember("Sam",   "Médico"));
-
-            this.state.status = "active";
-            this.state.addHistory("La expedición ha comenzado.");
-            return true;
-        }
-
-        nextDay() {
-            if (this.state.status !== "active") return null;
-
-            this.resources.consumeDailyResources();
-            const event = this.events.generateEvent();
-            this.events.applyEvent(event);
-
-            if (this.resources.checkCriticalResources() || this.crew.checkCrewStatus()) {
-                this.state.status = "defeat";
-            } else if (this.state.day >= this.state.maxDays) {
-                this.state.status = "evaluation";
-            } else {
-                this.state.day++;
-            }
-            return event;
-        }
-
-        getState() { return this.state; }
-    }
-
-    // ─── src/minigame/ShootingGame.js ─────────────────────────────────────────
-
-    const ShootingGame = (() => {
-        let canvas, ctx;
-        let targets    = [];
-        let score      = 0;
-        let running    = false;
-        let spawnTimer = null;
-        let animFrame  = null;
-
-        const TARGET_RADIUS  = 24;
-        const SPAWN_INTERVAL = 1200; // ms entre spawns
-        const TARGET_LIFE    = 2000; // ms antes de desaparecer
-
-        function _resize() {
-            const rect = canvas.parentElement.getBoundingClientRect();
-            canvas.width  = rect.width;
-            canvas.height = rect.height;
-        }
-
-        function _spawnTarget() {
-            if (!running) return;
-            const margin = TARGET_RADIUS + 10;
-            const x = margin + Math.random() * (canvas.width  - margin * 2);
-            const y = margin + Math.random() * (canvas.height - margin * 2);
-            targets.push({ x, y, born: performance.now(), hit: false });
-        }
-
-        function _draw(now) {
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-            // Fondo
-            ctx.fillStyle = '#1a1a2e';
-            ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-            // Blancos
-            targets = targets.filter(t => {
-                const age = now - t.born;
-                if (age > TARGET_LIFE && !t.hit) return false;
-                if (t.hit) return false;
-
-                const lifeRatio = age / TARGET_LIFE;
-
-                // Círculo exterior (se achica con el tiempo)
-                const outerR = TARGET_RADIUS * (1 - lifeRatio * 0.3);
-                ctx.beginPath();
-                ctx.arc(t.x, t.y, outerR, 0, Math.PI * 2);
-                ctx.fillStyle = `rgba(220, 50, 50, ${1 - lifeRatio})`;
-                ctx.fill();
-
-                // Anillo blanco
-                ctx.beginPath();
-                ctx.arc(t.x, t.y, outerR * 0.65, 0, Math.PI * 2);
-                ctx.fillStyle = `rgba(255,255,255, ${1 - lifeRatio})`;
-                ctx.fill();
-
-                // Centro rojo
-                ctx.beginPath();
-                ctx.arc(t.x, t.y, outerR * 0.3, 0, Math.PI * 2);
-                ctx.fillStyle = `rgba(180, 0, 0, ${1 - lifeRatio})`;
-                ctx.fill();
-
-                return true;
-            });
-
-            // Score
-            ctx.fillStyle = '#fff';
-            ctx.font      = 'bold 18px sans-serif';
-            ctx.fillText(`Score: ${score}`, 14, 28);
-
-            if (running) animFrame = requestAnimationFrame(_draw);
-        }
-
-        function _onClick(e) {
-            if (!running) return;
-            const rect = canvas.getBoundingClientRect();
-            const mx = e.clientX - rect.left;
-            const my = e.clientY - rect.top;
-
-            let hit = false;
-            targets.forEach(t => {
-                if (t.hit) return;
-                const dx = mx - t.x;
-                const dy = my - t.y;
-                if (Math.sqrt(dx * dx + dy * dy) <= TARGET_RADIUS) {
-                    t.hit = true;
-                    score++;
-                    hit = true;
-                }
-            });
-
-            // Flash en miss
-            if (!hit) {
-                ctx.fillStyle = 'rgba(255,255,255,0.08)';
-                ctx.fillRect(0, 0, canvas.width, canvas.height);
-            }
-        }
-
-        function start() {
-            if (running) return;
-            canvas  = document.getElementById('minigame-canvas');
-            ctx     = canvas.getContext('2d');
-            score   = 0;
-            targets = [];
-            running = true;
-
-            _resize();
-            window.addEventListener('resize', _resize);
-            canvas.addEventListener('click', _onClick);
-
-            _spawnTarget();
-            spawnTimer = setInterval(_spawnTarget, SPAWN_INTERVAL);
-            animFrame  = requestAnimationFrame(_draw);
-        }
-
-        function stop() {
-            running = false;
-            clearInterval(spawnTimer);
-            cancelAnimationFrame(animFrame);
-            if (canvas) canvas.removeEventListener('click', _onClick);
-            window.removeEventListener('resize', _resize);
-        }
-
-        function getScore() { return score; }
-
-        return { start, stop, getScore };
-    })();
-
-    // ─── src/main.js ──────────────────────────────────────────────────────────
-
-    document.addEventListener('DOMContentLoaded', () => {
-        GameState.init();
-    });
-    </script>
+    <div id="toast" class="toast" role="status"></div>
+    <script type="module" src="src/main.js"></script>
 </body>
 </html>
