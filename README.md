@@ -30,3 +30,7 @@ Through its interactive systems, **LAST ORBIT** introduces players to real conce
 ## 🕹️ PLAY THE GAME ##
 https://white-forest-0f9972610.5.azurestaticapps.net/
 
+
+## 📖 Game Design & Narrative
+Consulta la historia completa, mecánicas y balances en [docs/GDD_LAST_ORBIT.md](docs/GDD_LAST_ORBIT.md).
+
