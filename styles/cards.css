@@ -1,0 +1,47 @@
+/* Cargar DESPUÉS de main.css. Puedes borrar de main.css la regla #minigame-canvas. */
+.screen { height: 100dvh; }
+.btn-nav:disabled { opacity: .35; cursor: not-allowed; }
+button:focus-visible { outline: 2px solid #fff; outline-offset: 2px; }
+
+.minigame-canvas { display: block; width: 100%; height: 100%; touch-action: none; }
+.comic-layout { padding: 8px 10px; }
+
+/* HUD */
+.hud { display: flex; gap: 16px; align-items: center; padding: 8px 64px 0 12px; color: #ddd; font-size: .8rem; flex-wrap: wrap; }
+.hud-stats { display: flex; gap: 10px; }
+.stat { width: 76px; }
+.bar { height: 6px; background: #333; border-radius: 3px; overflow: hidden; margin-top: 2px; }
+.bar i { display: block; height: 100%; background: #27ae60; transition: width .3s; }
+.bar i.low { background: #cc0000; }
+.hud-crew { display: flex; gap: 6px; }
+.chip { padding: 2px 8px; border-radius: 10px; border: 1px solid #555; }
+.chip.healthy { border-color: #27ae60; } .chip.injured { border-color: #f1c40f; }
+.chip.critical { border-color: #e67e22; } .chip.dead { border-color: #555; color: #666; text-decoration: line-through; }
+.hud-meta { margin-left: auto; color: #aaa; }
+
+.event-banner { margin: 6px 12px 0; padding: 6px 12px; border-left: 4px solid #888; background: #1c1c1c; color: #ddd; font-size: .85rem; }
+.event--emergency { border-color: #cc0000; } .event--discovery { border-color: #2980b9; } .event--bonus { border-color: #27ae60; }
+.event-banner[hidden] { display: none; }
+
+/* Cartas */
+.card-tray { display: flex; align-items: stretch; gap: 10px; padding: 6px 12px 0; }
+#plays-left { color: #aaa; font-size: .8rem; align-self: center; }
+.card-hand { display: flex; gap: 8px; overflow-x: auto; flex: 1; padding-top: 4px; }
+.card { flex: 0 0 170px; display: flex; flex-direction: column; gap: 4px; text-align: left; padding: 8px 10px; background: #1a1a2e; color: #eee; border: 2px solid #444; border-radius: 8px; cursor: pointer; transition: transform .1s, border-color .2s; }
+.card:hover:not(:disabled) { transform: translateY(-4px); border-color: #fff; }
+.card:disabled { opacity: .4; cursor: not-allowed; }
+.card small { color: #aaa; font-size: .72rem; }
+.card em { display: flex; flex-wrap: wrap; gap: 4px; font-style: normal; font-size: .68rem; }
+.card em span { background: #000; padding: 1px 6px; border-radius: 6px; }
+.card--tech { border-color: #2980b9; } .card--supply { border-color: #d68910; } .card--medical { border-color: #27ae60; }
+.card--science { border-color: #8e44ad; } .card--risk { border-color: #cc0000; }
+
+.game-footer .hint { color: #aaa; font-size: .8rem; }
+.toast { position: fixed; bottom: 70px; left: 50%; transform: translate(-50%, 20px); background: #000c; color: #fff; padding: 8px 18px; border-radius: 20px; opacity: 0; pointer-events: none; transition: .3s; z-index: 50; }
+.toast.show { opacity: 1; transform: translate(-50%, 0); }
+
+/* Ending */
+.ending-content { text-align: center; color: #ddd; display: flex; flex-direction: column; align-items: center; gap: 12px; }
+#ending-stats { list-style: none; display: flex; gap: 20px; color: #aaa; }
+#screen-ending[data-result="victory"] #ending-title { color: #27ae60; }
+#screen-ending[data-result="defeat"] #ending-title { color: #cc0000; }
