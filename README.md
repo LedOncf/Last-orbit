@@ -6,7 +6,7 @@
 
 **LAST ORBIT** is a **roguelike** strategy, resource-management, and narrative survival game featuring retro aerospace console _pixel art_, developed for the **NASA Space Apps Challenge**.
 
-You step into the boots of **`[Name TBD]`**, a newly appointed Commander in NASA's Rapid Response Division. At **02:47 UTC**, an emergency transmission from Houston alerts command to the discovery of **3I/Nyx**, the third confirmed interstellar object passing through our Solar System. This is your first operation in command, and **the entire future of your career depends on what happens over the next 72 hours**: achieving a historic scientific breakthrough will cement your legacy at the agency, while returning empty-handed—or failing to make it back—will mean the end of your career.
+You step into the boots of **Luke**, a newly appointed Commander in NASA's Rapid Response Division. At **02:47 UTC**, an emergency transmission from Houston alerts command to the discovery of **3I/Nyx**, the third confirmed interstellar object passing through our Solar System. This is your first operation in command, and **the entire future of your career depends on what happens over the next 72 hours**: achieving a historic scientific breakthrough will cement your legacy at the agency, while returning empty-handed—or failing to make it back—will mean the end of your career.
 
 Designed as a **roguelike** experience, **no two runs are ever the same**. Careful pre-launch organization, smart resource management, and every decision you make directly shape what you uncover and your chances of bringing your crew home alive.
 
