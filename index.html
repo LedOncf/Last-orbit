@@ -18,6 +18,19 @@
         </div>
     </div>
 
+    <!-- MODAL: Intro dialog -->
+    <div id="modal-intro" class="modal-overlay hidden">
+        <div class="modal-box">
+            <p class="modal-text">
+                Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+                Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+                Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris
+                nisi ut aliquip ex ea commodo consequat.
+            </p>
+            <button id="btn-next" class="btn-next">Next</button>
+        </div>
+    </div>
+
     <!-- SCREEN 2: Game -->
     <div id="screen-game" class="screen">
         <button class="btn-pause" id="btn-pause-game">
@@ -287,8 +300,24 @@
         function getHistory()       { return [...history]; }
 
         function init() {
-            const btnStart = document.getElementById('btn-start');
-            if (btnStart) btnStart.addEventListener('click', () => goToScreen(SCREENS.GAME));
+            const btnStart   = document.getElementById('btn-start');
+            const modalIntro = document.getElementById('modal-intro');
+            const btnNext    = document.getElementById('btn-next');
+
+            // Answer → abre el modal
+            if (btnStart) {
+                btnStart.addEventListener('click', () => {
+                    modalIntro.classList.remove('hidden');
+                });
+            }
+
+            // Next → cierra el modal y va al juego
+            if (btnNext) {
+                btnNext.addEventListener('click', () => {
+                    modalIntro.classList.add('hidden');
+                    goToScreen(SCREENS.GAME);
+                });
+            }
 
             const btnEnding = document.getElementById('btn-go-ending');
             if (btnEnding) btnEnding.addEventListener('click', () => goToScreen(SCREENS.ENDING));
