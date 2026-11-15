@@ -33,7 +33,7 @@ export class Minigame {
         ctx.fillStyle = 'rgba(0,0,0,0.6)'; ctx.fillRect(0, 0, w, h);
         ctx.fillStyle = '#fff'; ctx.textAlign = 'center';
         ctx.font = 'bold 28px sans-serif'; ctx.fillText(`${Math.round(r * 100)}%`, w / 2, h / 2);
-        ctx.font = '14px sans-serif'; ctx.fillText('Completado', w / 2, h / 2 + 26);
+        ctx.font = '14px sans-serif'; ctx.fillText('Completed', w / 2, h / 2 + 26);
         ctx.textAlign = 'left';
         this.onFinish?.(r);
     }

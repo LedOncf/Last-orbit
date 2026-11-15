@@ -10,8 +10,27 @@ export class EventManager {
     }
     applyEvent(event) {
         for (const [k, v] of Object.entries(event.effect)) {
-            if (k in this.state.resources) this.resources.modifyResource(k, v);
-            else if (k in this.state.discovery) this.state.discovery[k] = Math.max(0, Math.min(100, this.state.discovery[k] + v));
+            if (k in this.state.resources) {
+                const crew = this.state.loadout?.crew ?? [];
+                let effect = v;
+                if (v < 0 && (k === 'integrity' || k === 'lifeSupport' || k === 'oxygen' || k === 'energy')) {
+                    const crewEffect = k === 'integrity' ? 'hullDamageReduction'
+                        : k === 'energy' ? 'energyDamageReduction' : 'lifeSupportDamageReduction';
+                    const reduction = crew.reduce((bonus, member) => bonus + (member.effects?.[crewEffect] ?? 0), 0);
+                    const shipMultiplier = k === 'integrity' ? (this.state.loadout?.ship.hullDamageMultiplier ?? 1) : 1;
+                    effect = Math.ceil(v * shipMultiplier * (1 - reduction));
+                }
+                this.resources.modifyResource(k, effect);
+            } else if (k in this.state.discovery) {
+                const isScience = k === 'researchLevel';
+                const scienceMultiplier = isScience
+                    ? (this.state.loadout?.artifact.scienceYieldMultiplier ?? 1)
+                        + (this.state.loadout?.crew.reduce((bonus, member) => bonus + (member.effects?.scienceYieldBonus ?? 0), 0) ?? 0)
+                    : 1;
+                const gain = isScience ? Math.round(v * scienceMultiplier) : v;
+                this.state.discovery[k] = Math.max(0, Math.min(100, this.state.discovery[k] + gain));
+                if (isScience) this.state.science += Math.max(0, gain);
+            }
         }
         this.state.addHistory(`Evento: ${event.title}`);
         return event;

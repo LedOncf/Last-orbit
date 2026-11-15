@@ -1,16 +1,12 @@
-// Datos de la partida (antes este nombre lo usaba el manejador de pantallas)
-import { initialResources, initialDiscovery } from '../data/initialResources.js';
-import { MAX_TURNS } from '../utils/constants.js';
-
+import { initialResources } from '../data/initialResources.js';
 export class GameState {
     constructor() {
-        this.status = 'preparation'; // preparation | active | defeat | evaluation
-        this.turn = 1;
-        this.maxTurns = MAX_TURNS;
-        this.resources = { ...initialResources };
-        this.discovery = { ...initialDiscovery };
+        this.status = 'preparation';
+        Object.assign(this, initialResources);
+        this.ship = null;
+        this.artifact = null;
         this.crew = [];
-        this.history = [];
+        this.currentDay = 0;
+        this.usedEvents = [];
     }
-    addHistory(entry) { this.history.push(entry); }
 }

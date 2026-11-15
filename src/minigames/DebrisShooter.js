@@ -2,7 +2,7 @@ import { Minigame } from './Minigame.js';
 const R = 24, SPAWN = 900, LIFE = 1800;
 
 export class DebrisShooter extends Minigame {
-    constructor(c, o) { super(c, { ...o, duration: 15000, title: 'Limpieza de escombros' }); }
+    constructor(c, o) { super(c, { ...o, duration: 15000, title: 'Debris Cleanup' }); }
     init() { this.targets = []; this.acc = SPAWN; this.hits = 0; this.spawned = 0; }
     update(dt) {
         this.acc += dt;

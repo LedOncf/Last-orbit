@@ -18,9 +18,98 @@
 
     <div id="modal-intro" class="modal-overlay hidden">
         <div class="modal-box">
-            <p class="modal-text">"Hello!! Luke, congratulations on your promotion to Commander. I know howhard you worked to get here, and it is urgent that you see this. During a routine sweep by the Vera C. Rubin Observatory in the Chilean Andes, an uncataloged object was suddenlydetected moving at hyperbolic speed." .</p>
-            <button id="btn-next" class="btn-next">Next</button>
+            <p class="modal-text">Hello!! Luke, congratulations on your promotion to Commander. I know how hard you worked to get here, and it is urgent that you see this. During a routine sweep by the Vera C. Rubin Observatory in the Chilean Andes, an uncataloged object was suddenly detected moving at hyperbolic speed.</p>
+            <button id="btn-next" class="btn-next">Continue</button>
         </div>
+    </div>
+
+    <div id="screen-loadout" class="screen loadout-screen">
+        <div class="loadout-shell">
+            <header class="loadout-header">
+                <p class="loadout-kicker">LAST ORBIT / FLIGHT DECK 01</p>
+                <h1>MISSION LOADOUT // TACTICAL CONFIGURATION</h1>
+                <p class="loadout-subtitle">Commander Luke, allocate your vessel, scientific payload, and specialist crew before departure. Higher scientific capability demands stricter resource management.</p>
+            </header>
+
+            <ol class="loadout-round-indicator" aria-label="Loadout rounds">
+                <li class="is-active" data-round-indicator="1">ROUND 1/3: SPACECRAFT</li>
+                <li data-round-indicator="2">ROUND 2/3: SCIENTIFIC ARTIFACT</li>
+                <li data-round-indicator="3">ROUND 3/3: CREW SPECIALISTS</li>
+            </ol>
+
+            <div class="loadout-layout">
+                <main class="loadout-selections">
+                    <section class="loadout-round-panel is-active" id="loadout-round-1" aria-labelledby="ship-heading">
+                        <div class="loadout-section__heading">
+                            <h2 id="ship-heading">SELECT SPACECRAFT <span>(CHOOSE 1)</span></h2>
+                            <span class="selection-count" id="ship-count">0 / 1</span>
+                        </div>
+                        <div class="loadout-options loadout-options--three" id="loadout-ships"></div>
+                    </section>
+
+                    <section class="loadout-round-panel" id="loadout-round-2" aria-labelledby="artifact-heading" hidden>
+                        <div class="loadout-section__heading">
+                            <h2 id="artifact-heading">SELECT SCIENTIFIC ARTIFACT <span>(CHOOSE 1)</span></h2>
+                            <span class="selection-count" id="artifact-count">0 / 1</span>
+                        </div>
+                        <div class="loadout-options loadout-options--three" id="loadout-artifacts"></div>
+                    </section>
+
+                    <section class="loadout-round-panel" id="loadout-round-3" aria-labelledby="crew-heading" hidden>
+                        <div class="loadout-section__heading">
+                            <div>
+                                <h2 id="crew-heading">ASSIGN CREW SPECIALISTS</h2>
+                                <p class="loadout-round-rule" id="loadout-round-rule">Select a spacecraft to view crew capacity.</p>
+                            </div>
+                            <span class="selection-count" id="crew-count">0 / 0</span>
+                        </div>
+                        <div class="loadout-options loadout-options--crew" id="loadout-crew"></div>
+                    </section>
+                </main>
+
+                <aside class="loadout-preview" aria-live="polite">
+                    <p class="loadout-kicker">PRE-LAUNCH TELEMETRY</p>
+                    <h2>MISSION PROFILE</h2>
+                    <dl id="loadout-summary"></dl>
+                    <p class="loadout-capacity" id="loadout-capacity">CREW CAPACITY // SELECT A SPACECRAFT</p>
+                    <div class="loadout-meters">
+                        <div class="telemetry-meter"><div><span>ENERGY</span><strong>10 / 10</strong></div><i><b></b></i></div>
+                        <div class="telemetry-meter"><div><span>HULL INTEGRITY</span><strong>10 / 10</strong></div><i><b></b></i></div>
+                        <div class="telemetry-meter"><div><span>LIFE SUPPORT</span><strong>10 / 10</strong></div><i><b></b></i></div>
+                    </div>
+                    <div class="loadout-actions">
+                        <button id="btn-loadout-back" class="loadout-back">BACK TO BRIEFING</button>
+                        <button id="btn-loadout-previous" class="loadout-back" disabled>PREVIOUS ROUND</button>
+                        <button id="btn-loadout-next" class="loadout-confirm" disabled>NEXT ROUND</button>
+                        <button id="btn-confirm-loadout" class="loadout-confirm" hidden disabled>CONFIRM LOADOUT &amp; LAUNCH</button>
+                    </div>
+                    <p class="loadout-lock" id="loadout-lock">CONFIGURATION INCOMPLETE // LAUNCH LOCKED</p>
+                </aside>
+            </div>
+            <footer class="loadout-footer"><span>DSN LINK: NOMINAL</span><span>DESTINATION: 3I / NYX</span><span>DEPARTURE WINDOW: T-00:00</span></footer>
+        </div>
+    </div>
+
+    <div id="screen-story" class="screen story-screen">
+        <main class="story-console">
+            <p class="story-kicker" id="story-kicker">MISSION CONTROL // LIVE TRANSMISSION</p>
+            <h1 id="story-title">MISSION UPDATE</h1>
+            <div class="story-layout">
+                <figure class="story-art" id="story-art-frame" hidden>
+                    <img id="story-art" alt="3I/Nyx observed from the spacecraft">
+                    <figcaption>OBSERVATORY VISUAL // 3I/NYX</figcaption>
+                    <aside class="object-tooltip" tabindex="0">
+                        <strong>OBJECT: 3I/NYX</strong>
+                        <span>A giant ball of ancient ice and dust that releases gas and light as it approaches the Sun. Coming from outside our Solar System, studying it will allow us to discover what exists in another corner of the galaxy.</span>
+                    </aside>
+                </figure>
+                <div class="story-copy">
+                    <p id="story-text"></p>
+                    <div class="story-actions" id="story-actions"></div>
+                </div>
+            </div>
+            <div class="story-telemetry"><span>DSN CHANNEL // SECURE</span><span id="story-day"></span><span>MISSION CLOCK // RUNNING</span></div>
+        </main>
     </div>
 
     <div id="screen-game" class="screen">
@@ -81,6 +170,7 @@
 
     <div id="screen-ending" class="screen">
         <div class="ending-content">
+            <p class="ending-kicker" id="ending-kicker">MISSION REPORT // CLASSIFIED</p>
             <h2 id="ending-title"></h2>
             <p id="ending-text"></p>
             <ul id="ending-stats"></ul>
