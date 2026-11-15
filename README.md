@@ -25,3 +25,8 @@ Through its interactive systems, **LAST ORBIT** introduces players to real conce
 - **Interstellar Objects & Hyperbolic Trajectories:** Inspired by real visitors such as _1I/'Oumuamua_ and _2I/Borisov_, highlighting the difference between periodic comets bound to the Sun in elliptical orbits and interstellar travelers crossing the Solar System on an open, one-way hyperbolic path.
 - **Cometary Anatomy & Sublimation:** Showing how solar heating transforms a comet's icy nucleus into a glowing _coma_ (an ionized cloud of gas and dust) rich in water ($\text{H}_2\text{O}$), methane ($\text{CH}_4$), and prebiotic molecules essential to understanding the origins of life.
 - **Real Space Exploration Instrumentation:** Presenting three authentic methods of remote and contact planetary science: infrared and mass spectrometry (_ROSINA/NIRSpec_), Laser-Induced Breakdown Spectroscopy (_LIBS_ / _SuperCam_), and microgravity cryogenic drilling (_Philae_'s _SD2_).
+
+
+## 🕹️ PLAY THE GAME ##
+https://white-forest-0f9972610.5.azurestaticapps.net/
+
